@@ -5,14 +5,10 @@ from typing import Any, Optional, TYPE_CHECKING
 from frozendict import frozendict
 
 from bgpy.enums import ASGroups
-
 from bgpy.simulation_engine import Announcement as Ann
-from bgpy.simulation_engine import Policy
-from bgpy.simulation_engine import BGP
-
+from bgpy.simulation_engine import Policy, BGP
 from .preprocess_anns_funcs import noop, PREPROCESS_ANNS_FUNC_TYPE
 from .roa_info import ROAInfo
-
 
 if TYPE_CHECKING:
     from .scenario import Scenario
@@ -127,7 +123,7 @@ class ScenarioConfig:
         if not isinstance(self.hardcoded_asn_cls_dict, frozendict):  # type: ignore
             raise TypeError(
                 "hardcoded_asn_cls_dict of ScenarioConfig is not frozendict "
-                f"and is instead {type(self.hardcoded_asn_cls_dict)}. Please "
+                f"and is instead {type[self.hardcoded_asn_cls_dict]}. Please "
                 "change the type to frozendict so that it is hashable"
             )
 

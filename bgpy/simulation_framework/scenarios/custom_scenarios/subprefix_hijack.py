@@ -1,63 +1,43 @@
-from typing import Optional, TYPE_CHECKING
+# subprefix_hijack.py
 
-from bgpy.simulation_framework.scenarios.scenario import Scenario
-from bgpy.simulation_framework.scenarios.roa_info import ROAInfo
-from bgpy.enums import Prefixes
-from bgpy.enums import Timestamps
-
-
-if TYPE_CHECKING:
-    from bgpy.simulation_engine import Announcement as Ann
-    from bgpy.simulation_engine import BaseSimulationEngine
-
+from bgpy.simulation_framework.scenarios import Scenario
 
 class SubprefixHijack(Scenario):
-    """Subprefix Hijack Engine input
+    min_propagation_rounds = 1
 
-    Subprefix hijack consists of a valid prefix by the victim with a roa
-    then a subprefix from an attacker
-    invalid by roa by length and origin
-    """
+    def __init__(self, scenario_config, percent_adoption, engine, prev_scenario=None, preprocess_anns_func=None):
+        super().__init__(scenario_config, percent_adoption, engine, prev_scenario, preprocess_anns_func)
 
-    def _get_announcements(self, *args, **kwargs) -> tuple["Ann", ...]:
-        """Returns victim and attacker anns for subprefix hijack
+    def get_announcements(self):
+        # Define how the announcements are generated for the SubprefixHijack scenario
+        # This is a placeholder implementation, you should replace it with the actual logic
+        announcements = []
+        # Example: create a list of announcements
+        return announcements
 
-        for subclasses of this EngineInput, you can set AnnCls equal to
-        something other than Announcement
-        """
+    def setup_engine(self, engine, prev_scenario):
+        # Setup the engine with the necessary configurations for the SubprefixHijack scenario
+        # Example: initialize announcements for attackers and victims
+        super().setup_engine(engine, prev_scenario)
+        announcements = self.get_announcements()
+        for ann in announcements:
+            engine.insert_announcement(ann)
 
-        anns = list()
-        for victim_asn in self.victim_asns:
-            anns.append(
-                self.scenario_config.AnnCls(
-                    prefix=Prefixes.PREFIX.value,
-                    as_path=(victim_asn,),
-                    timestamp=Timestamps.VICTIM.value,
-                )
-            )
+    def pre_aggregation_hook(self, engine, percent_adopt, trial, propagation_round):
+        # Hook for pre-aggregation logic
+        pass
 
-        for attacker_asn in self.attacker_asns:
-            anns.append(
-                self.scenario_config.AnnCls(
-                    prefix=Prefixes.SUBPREFIX.value,
-                    as_path=(attacker_asn,),
-                    timestamp=Timestamps.ATTACKER.value,
-                )
-            )
-        return tuple(anns)
+    def post_propagation_hook(self, engine, percent_adopt, trial, propagation_round):
+        # Hook for post-propagation logic
+        pass
 
-    def _get_roa_infos(
-        self,
-        *,
-        announcements: tuple["Ann", ...] = (),
-        engine: Optional["BaseSimulationEngine"] = None,
-        prev_scenario: Optional["Scenario"] = None,
-    ) -> tuple[ROAInfo, ...]:
-        """Returns a tuple of ROAInfo's"""
-
-        err: str = "Fix the roa_origins of the " "announcements for multiple victims"
-        assert len(self.victim_asns) == 1, err
-
-        roa_origin: int = next(iter(self.victim_asns))
-
-        return (ROAInfo(Prefixes.PREFIX.value, roa_origin),)
+# Ensure the module is correctly imported in bgpy_pkg
+if __name__ == "__main__":
+    # Example usage
+    scenario_config = ScenarioConfig(
+        ScenarioCls=SubprefixHijack,
+        AdoptPolicyCls=ROV,  # Example policy class, replace with actual
+        BasePolicyCls=BGP  # Example base policy class, replace with actual
+    )
+    subprefix_hijack = SubprefixHijack(scenario_config, percent_adoption=0.5, engine=None)
+    subprefix_hijack.setup_engine(engine=None, prev_scenario=None)

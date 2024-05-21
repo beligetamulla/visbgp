@@ -73,7 +73,6 @@ class Simulation:
         # Control plane trackign for traceback and MetricTrackerCls
         control_plane_tracking: bool = False,
         metric_keys: tuple[MetricKey, ...] = tuple(list(get_all_metric_keys())),
-        additional_ann_data: Optional[dict] = None,  # Add this line
     ) -> None:
         """Downloads relationship data, runs simulation
 
@@ -112,8 +111,6 @@ class Simulation:
         self._validate_scenario_configs()
 
         self.metric_keys: tuple[MetricKey, ...] = metric_keys
-
-        self.additional_ann_data: Optional[dict] = additional_ann_data  # Add this line
 
         scenario_labels = list()
         for scenario_config in self.scenario_configs:
@@ -287,7 +284,6 @@ class Simulation:
                     engine=engine,
                     prev_scenario=prev_scenario,
                     preprocess_anns_func=scenario_config.preprocess_anns_func,
-                    additional_ann_data=self.additional_ann_data,  # Pass additional_ann_data
                 )
 
                 self._print_progress(percent_adopt, scenario, trial)
@@ -428,3 +424,7 @@ class Simulation:
         if GraphFactoryCls:
             GraphFactoryCls(**kwargs).generate_graphs()
             print(f"\nWrote graphs to {kwargs['graph_dir']}")
+
+    @property
+    def graph_output_dir(self) -> Path:
+        return self.output_dir / "graphs"

@@ -38,7 +38,6 @@ class Scenario(ABC):
         engine: Optional[BaseSimulationEngine] = None,
         prev_scenario: Optional["Scenario"] = None,
         preprocess_anns_func: PREPROCESS_ANNS_FUNC_TYPE = noop,
-        additional_ann_data: Optional[dict] = None,  # Add this line
     ):
         """inits attrs
 
@@ -55,7 +54,6 @@ class Scenario(ABC):
         logging.debug("Initializing Scenario with config: %s", scenario_config)
         self.scenario_config: ScenarioConfig = scenario_config
         self.percent_adoption: Union[float, SpecialPercentAdoptions] = percent_adoption
-        self.additional_ann_data: Optional[dict] = additional_ann_data  # Add this line
 
         self.attacker_asns: frozenset[int] = self._get_attacker_asns(
             scenario_config.override_attacker_asns, engine, prev_scenario
@@ -94,9 +92,6 @@ class Scenario(ABC):
         )
 
         self.policy_classes_used: frozenset[Type[Policy]] = frozenset()
-
-    # Rest of the class remains the same...
-
 
     #################
     # Get attackers #

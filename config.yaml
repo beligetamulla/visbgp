@@ -1,0 +1,11 @@
+influxdb:
+  host: localhost
+  port: 8086
+  database: bgpy
+
+bgpy_simulator:
+  # Example settings
+  simulation_duration: 60  # in minutes
+  as_count: 500  # Number of Autonomous Systems to simulate
+  bgp_hijack_frequency: 5  # Frequency of BGP hijack attempts in minutes
+  log_level: INFO  # Logging level
